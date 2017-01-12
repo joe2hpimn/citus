@@ -1309,6 +1309,7 @@ SendCopyDataToAll(StringInfo dataBuffer, List *connectionList)
 
 		SendCopyDataToPlacement(dataBuffer, connection, shardId);
 	}
+
 }
 
 
@@ -2059,8 +2060,6 @@ CitusCopyDestReceiverStartup(DestReceiver *dest, int operation,
 	/* use only columns in insert target list */
 	inputColumnCount = list_length(columnNameList);
 
-	/* truncate the tuple descriptor, query might have additional resjunk columns */
-	inputTupleDescriptor->natts = inputColumnCount;
 	copyDest->tupleDescriptor = inputTupleDescriptor;
 
 	/* prepare output functions */
