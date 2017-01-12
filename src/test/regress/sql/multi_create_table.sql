@@ -133,6 +133,15 @@ SELECT create_distributed_table('data_load_test', 'col1');
 SELECT * FROM data_load_test;
 DROP TABLE data_load_test;
 
+-- Test data loading after dropping a column
+CREATE TABLE data_load_test (col1 int, col2 text, col3 text);
+INSERT INTO data_load_test VALUES (132, 'hello', 'world');
+INSERT INTO data_load_test VALUES (243, 'world', 'hello');
+ALTER TABLE data_load_test DROP COLUMN col2;
+SELECT create_distributed_table('data_load_test', 'col1');
+SELECT * FROM data_load_test;
+DROP TABLE data_load_test;
+
 SET citus.shard_replication_factor TO default;
 
 SET citus.shard_count to 4;
