@@ -1226,6 +1226,10 @@ EndRemoteCopy(int64 shardId, List *connectionList, bool stopOnFailure)
 
 		PQclear(result);
 
+		/* hack alert : why we need this ? */
+		result = PQgetResult(connection->pgConn);
+		Assert(result == NULL);
+
 		UnclaimConnection(connection);
 	}
 }
