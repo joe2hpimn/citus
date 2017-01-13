@@ -36,7 +36,7 @@ extern HTAB * CreateShardConnectionHash(MemoryContext memoryContext);
 extern ShardConnections * GetShardConnections(int64 shardId, bool *shardConnectionsFound);
 extern ShardConnections * GetShardHashConnections(HTAB *connectionHash, int64 shardId,
 												  bool *connectionsFound);
-extern List * ConnectionList(HTAB *connectionHash);
+extern List * ShardConnectionList(HTAB *connectionHash);
 extern void CloseConnections(List *connectionList);
 extern void ResetShardPlacementTransactionState(void);
 
