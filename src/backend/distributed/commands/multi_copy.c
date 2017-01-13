@@ -442,8 +442,6 @@ CopyToExistingShards(CopyStmt *copyStatement, char *completionTag)
 	copyOutState->fe_msgbuf = makeStringInfo();
 	copyOutState->rowcontext = executorTupleContext;
 
-	copyOutState->binary = false;
-
 	columnOutputFunctions = ColumnOutputFunctions(tupleDescriptor, copyOutState->binary);
 
 	/* create a mapping of shard id to a connection for each of its placements */
