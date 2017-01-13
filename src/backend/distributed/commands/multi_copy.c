@@ -913,6 +913,7 @@ OpenCopyConnections(CopyStmt *copyStatement, ShardConnections *shardConnections,
 		MultiConnection *connection = NULL;
 		uint32 connectionFlags = SESSION_LIFESPAN | FOR_DML;
 		StringInfo copyCommand = NULL;
+		PGresult *result = NULL;
 
 
 		/*
@@ -944,17 +945,20 @@ OpenCopyConnections(CopyStmt *copyStatement, ShardConnections *shardConnections,
 		RemoteTransactionBeginIfNecessary(connection);
 		copyCommand = ConstructCopyStatement(copyStatement, shardConnections->shardId,
 											 useBinaryCopyFormat);
+		result = PQexec(connection->pgConn, copyCommand->data);
 
-		if (!SendRemoteCommand(connection, copyCommand->data))
+		if (PQresultStatus(result) != PGRES_COPY_IN)
 		{
 			ReportConnectionError(connection, WARNING);
 			MarkRemoteTransactionFailed(connection, true);
 
+			PQclear(result);
 			/* failed placements will be invalidated by transaction machinery */
 			failedPlacementList = lappend(failedPlacementList, placement);
 			continue;
 		}
 
+		PQclear(result);
 		connectionList = lappend(connectionList, connection);
 	}
 
@@ -1167,7 +1171,8 @@ SendCopyDataToPlacement(StringInfo dataBuffer, int64 shardId, MultiConnection *c
 	{
 		ereport(ERROR, (errcode(ERRCODE_IO_ERROR),
 						errmsg("failed to COPY to shard %ld on %s:%d",
-							   shardId, connection->hostname, connection->port)));
+							   shardId, connection->hostname, connection->port),
+						errdetail("failed to send %d bytes %s", dataBuffer->len, dataBuffer->data)));
 	}
 }
 
@@ -1220,6 +1225,8 @@ EndRemoteCopy(int64 shardId, List *connectionList, bool stopOnFailure)
 		}
 
 		PQclear(result);
+
+		UnclaimConnection(connection);
 	}
 }
 
