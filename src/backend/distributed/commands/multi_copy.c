@@ -953,6 +953,7 @@ OpenCopyConnections(CopyStmt *copyStatement, ShardConnections *shardConnections,
 			MarkRemoteTransactionFailed(connection, true);
 
 			PQclear(result);
+
 			/* failed placements will be invalidated by transaction machinery */
 			failedPlacementList = lappend(failedPlacementList, placement);
 			continue;
@@ -1172,7 +1173,8 @@ SendCopyDataToPlacement(StringInfo dataBuffer, int64 shardId, MultiConnection *c
 		ereport(ERROR, (errcode(ERRCODE_IO_ERROR),
 						errmsg("failed to COPY to shard %ld on %s:%d",
 							   shardId, connection->hostname, connection->port),
-						errdetail("failed to send %d bytes %s", dataBuffer->len, dataBuffer->data)));
+						errdetail("failed to send %d bytes %s", dataBuffer->len,
+								  dataBuffer->data)));
 	}
 }
 
