@@ -907,25 +907,11 @@ OpenCopyConnections(CopyStmt *copyStatement, ShardConnections *shardConnections,
 		ShardPlacement *placement = (ShardPlacement *) lfirst(placementCell);
 		char *nodeName = placement->nodeName;
 		int nodePort = placement->nodePort;
-		WorkerNode *workerNode = FindWorkerNode(nodeName, nodePort);
-		int workerGroupId = 0;
 		char *nodeUser = CurrentUserName();
 		MultiConnection *connection = NULL;
 		uint32 connectionFlags = SESSION_LIFESPAN | FOR_DML;
 		StringInfo copyCommand = NULL;
 		PGresult *result = NULL;
-
-
-		/*
-		 * When a copy is initiated from a worker, the information about the connected
-		 * worker node may not be found if pg_dist_node entries are not synced to this
-		 * node. In that case we leave the groupId as 0. Fortunately, it is unused since
-		 * COPY from a worker does not initiate a 2PC.
-		 */
-		if (workerNode != NULL)
-		{
-			workerGroupId = workerNode->groupId;
-		}
 
 		connection = GetPlacementConnection(connectionFlags, placement, nodeUser);
 
