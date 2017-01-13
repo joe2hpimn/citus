@@ -66,6 +66,7 @@ typedef struct CitusCopyDestReceiver
 	Relation distributedRelation;
 	char partitionMethod;
 	int partitionColumnIndex;
+	char replicationModel;
 
 	/* descriptor of the tuples that are sent to the worker */
 	TupleDesc tupleDescriptor;
