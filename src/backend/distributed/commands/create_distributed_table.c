@@ -60,6 +60,10 @@
 #include "utils/inval.h"
 
 
+/* Replication model to use when creating distributed tables */
+int ReplicationModel = REPLICATION_MODEL_COORDINATOR;
+
+
 /* local function forward declarations */
 static void CreateReferenceTable(Oid relationId);
 static void ConvertToDistributedTable(Oid relationId, char *distributionColumnName,
@@ -255,7 +259,7 @@ ConvertToDistributedTable(Oid relationId, char *distributionColumnName,
 	char relationKind = 0;
 	Var *distributionColumn = NULL;
 	char replicationModel = (distributionMethod == DISTRIBUTE_BY_NONE) ?
-							REPLICATION_MODEL_2PC : REPLICATION_MODEL_COORDINATOR;
+							REPLICATION_MODEL_2PC : ReplicationModel;
 
 	/*
 	 * Lock target relation with an exclusive lock - there's no way to make
