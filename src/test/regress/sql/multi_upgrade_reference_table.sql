@@ -525,6 +525,7 @@ DROP TABLE upgrade_reference_table_transaction_commit;
 -- create an mx table
 SET citus.shard_count TO 1;
 SET citus.shard_replication_factor TO 1;
+SET citus.replication_model TO 'streaming';
 CREATE TABLE upgrade_reference_table_mx(column1 int);
 SELECT create_distributed_table('upgrade_reference_table_mx', 'column1');
 
@@ -599,6 +600,7 @@ DROP TABLE upgrade_reference_table_mx;
 -- test valid cases, do it with MX
 SET citus.shard_count TO 1;
 SET citus.shard_replication_factor TO 2;
+RESET citus.replication_model;
 CREATE TABLE upgrade_reference_table_mx(column1 int);
 SELECT create_distributed_table('upgrade_reference_table_mx', 'column1');
 UPDATE pg_dist_shard_placement SET shardstate = 3 
