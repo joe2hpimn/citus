@@ -258,8 +258,21 @@ ConvertToDistributedTable(Oid relationId, char *distributionColumnName,
 	char *relationName = NULL;
 	char relationKind = 0;
 	Var *distributionColumn = NULL;
-	char replicationModel = (distributionMethod == DISTRIBUTE_BY_NONE) ?
-							REPLICATION_MODEL_2PC : ReplicationModel;
+	char replicationModel = REPLICATION_MODEL_INVALID;
+
+	if (ReplicationModel == REPLICATION_MODEL_STREAMING && ShardReplicationFactor != 1)
+	{
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("invalid replication settings"),
+						errdetail("Replication factors greater than one are incompatible "
+								  "with the streaming replication model."),
+						errhint("Try again after reducing \"citus.shard_replication_"
+								"factor\" to one or setting \"citus.replication_model\" "
+								"to \"statement\".")));
+	}
+
+	replicationModel = (distributionMethod == DISTRIBUTE_BY_NONE) ?
+					   REPLICATION_MODEL_2PC : ReplicationModel;
 
 	/*
 	 * Lock target relation with an exclusive lock - there's no way to make

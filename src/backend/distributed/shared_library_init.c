@@ -575,7 +575,7 @@ RegisterCitusConfigVariables(void)
 		REPLICATION_MODEL_COORDINATOR,
 		replication_model_options,
 		PGC_SUSET,
-		GUC_SUPERUSER_ONLY | GUC_NO_SHOW_ALL,
+		GUC_SUPERUSER_ONLY,
 		NULL, NULL, NULL);
 
 	DefineCustomEnumVariable(
