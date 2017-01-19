@@ -137,11 +137,17 @@ SELECT master_create_distributed_table('supplier_single_shard', 's_suppkey', 'ap
  
 (1 row)
 
--- Since we're superuser, we can set the replication model to 'streaming' to
--- create a one-off MX table
-SET citus.shard_replication_factor TO 1;
-SET citus.replication_model TO 'streaming';
 CREATE TABLE mx_table_test (col1 int, col2 text);
+-- Since we're superuser, we can set the replication model to 'streaming' to
+-- create a one-off MX table... but if we forget to set the replication factor to one,
+-- we should see an error reminding us to fix that
+SET citus.replication_model TO 'streaming';
+SELECT create_distributed_table('mx_table_test', 'col1');
+ERROR:  invalid replication settings
+DETAIL:  Replication factors greater than one are incompatible with the streaming replication model.
+HINT:  Try again after reducing "citus.shard_replication_factor" to one or setting "citus.replication_model" to "statement".
+-- ok, so now actually create the one-off MX table
+SET citus.shard_replication_factor TO 1;
 SELECT create_distributed_table('mx_table_test', 'col1');
  create_distributed_table 
 --------------------------

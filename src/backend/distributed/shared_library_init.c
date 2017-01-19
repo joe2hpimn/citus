@@ -569,8 +569,11 @@ RegisterCitusConfigVariables(void)
 
 	DefineCustomEnumVariable(
 		"citus.replication_model",
-		gettext_noop("TODO."),
-		gettext_noop("TODO."),
+		gettext_noop("Sets the replication model to be used for distributed tables."),
+		gettext_noop("Depending upon the execution environment, statement- or streaming-"
+					 "based replication modes may be employed. Though most Citus deploy-"
+					 "ments will simply use statement replication, hosted and MX-style"
+					 "deployments should set this parameter to 'streaming'."),
 		&ReplicationModel,
 		REPLICATION_MODEL_COORDINATOR,
 		replication_model_options,

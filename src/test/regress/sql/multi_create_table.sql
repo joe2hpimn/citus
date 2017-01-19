@@ -112,11 +112,16 @@ CREATE TABLE supplier_single_shard
 );
 SELECT master_create_distributed_table('supplier_single_shard', 's_suppkey', 'append');
 
--- Since we're superuser, we can set the replication model to 'streaming' to
--- create a one-off MX table
-SET citus.shard_replication_factor TO 1;
-SET citus.replication_model TO 'streaming';
 CREATE TABLE mx_table_test (col1 int, col2 text);
+
+-- Since we're superuser, we can set the replication model to 'streaming' to
+-- create a one-off MX table... but if we forget to set the replication factor to one,
+-- we should see an error reminding us to fix that
+SET citus.replication_model TO 'streaming';
+SELECT create_distributed_table('mx_table_test', 'col1');
+
+-- ok, so now actually create the one-off MX table
+SET citus.shard_replication_factor TO 1;
 SELECT create_distributed_table('mx_table_test', 'col1');
 SELECT repmodel FROM pg_dist_partition WHERE logicalrelid='mx_table_test'::regclass;
 DROP TABLE mx_table_test;
