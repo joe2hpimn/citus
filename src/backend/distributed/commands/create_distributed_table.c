@@ -260,16 +260,8 @@ ConvertToDistributedTable(Oid relationId, char *distributionColumnName,
 	Var *distributionColumn = NULL;
 	char replicationModel = REPLICATION_MODEL_INVALID;
 
-	if (ReplicationModel == REPLICATION_MODEL_STREAMING && ShardReplicationFactor != 1)
-	{
-		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-						errmsg("invalid replication settings"),
-						errdetail("Replication factors greater than one are incompatible "
-								  "with the streaming replication model."),
-						errhint("Try again after reducing \"citus.shard_replication_"
-								"factor\" to one or setting \"citus.replication_model\" "
-								"to \"statement\".")));
-	}
+	/* check global replicaiton settings before continuing */
+	EnsureReplicationSettings(InvalidOid);
 
 	replicationModel = (distributionMethod == DISTRIBUTE_BY_NONE) ?
 					   REPLICATION_MODEL_2PC : ReplicationModel;
@@ -982,4 +974,28 @@ ColumnType(Oid relationId, char *columnName)
 	Oid columnType = get_atttype(relationId, columnIndex);
 
 	return columnType;
+}
+
+
+void
+EnsureReplicationSettings(Oid relationId)
+{
+	char replicationModel = (char) ReplicationModel;
+	char *extraHint = " or setting \"citus.replication_model\" to \"statement\"";
+
+	if (relationId != InvalidOid)
+	{
+		replicationModel = TableReplicationModel(relationId);
+		extraHint = "";
+	}
+
+	if (replicationModel == REPLICATION_MODEL_STREAMING && ShardReplicationFactor != 1)
+	{
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("invalid replication settings"),
+						errdetail("Replication factors greater than one are incompatible "
+								  "with the streaming replication model."),
+						errhint("Try again after reducing \"citus.shard_replication_"
+								"factor\" to one%s.", extraHint)));
+	}
 }

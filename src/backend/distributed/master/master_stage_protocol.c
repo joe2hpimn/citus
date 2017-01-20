@@ -126,17 +126,7 @@ master_create_empty_shard(PG_FUNCTION_ARGS)
 								  "on reference tables")));
 	}
 
-	if (TableReplicationModel(relationId) == REPLICATION_MODEL_STREAMING &&
-		ShardReplicationFactor != 1)
-	{
-		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-						errmsg("invalid replication settings"),
-						errdetail("Replication factors greater than one are incompatible "
-								  "with the streaming replication model."),
-						errhint("Try again after reducing \"citus.shard_replication_"
-								"factor\" to one.")));
-	}
-
+	EnsureReplicationSettings(relationId);
 
 	/* generate new and unique shardId from sequence */
 	shardId = GetNextShardId();
