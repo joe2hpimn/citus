@@ -977,6 +977,12 @@ ColumnType(Oid relationId, char *columnName)
 }
 
 
+/*
+ * Check that the current replication factor setting is compatible with the
+ * replication model of relationId, if valid. If InvalidOid, check that the
+ * global replication model setting instead. Errors out if an invalid state
+ * is detected.
+ */
 void
 EnsureReplicationSettings(Oid relationId)
 {
