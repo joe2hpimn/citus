@@ -143,8 +143,7 @@ CREATE TABLE mx_table_test (col1 int, col2 text);
 -- we should see an error reminding us to fix that
 SET citus.replication_model TO 'streaming';
 SELECT create_distributed_table('mx_table_test', 'col1');
-ERROR:  invalid replication settings
-DETAIL:  Replication factors greater than one are incompatible with the streaming replication model.
+ERROR:  replication factors above one are incompatible with the streaming replication model
 HINT:  Try again after reducing "citus.shard_replication_factor" to one or setting "citus.replication_model" to "statement".
 -- ok, so now actually create the one-off MX table
 SET citus.shard_replication_factor TO 1;
