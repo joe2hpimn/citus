@@ -71,7 +71,7 @@ SELECT create_reference_table('replicate_reference_table_unhealthy');
 
 UPDATE pg_dist_shard_placement SET shardstate = 3 WHERE shardid = 1370000;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_unhealthy" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_unhealthy" to the node localhost:57638
 ERROR:  could not find any healthy placement for shard 1370000
 -- verify node is not added
 SELECT COUNT(*) FROM pg_dist_node WHERE nodeport = :worker_2_port;
@@ -123,7 +123,8 @@ WHERE colocationid IN
 (1 row)
 
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_valid" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_valid" to the node localhost:57638
+NOTICE:  Replicating reference table "replicate_reference_table_valid" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370002,1370002,localhost,57638,default,f)
@@ -244,7 +245,8 @@ WHERE colocationid IN
 
 BEGIN;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_rollback" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_rollback" to the node localhost:57638
+NOTICE:  Replicating reference table "replicate_reference_table_rollback" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370003,1370003,localhost,57638,default,f)
@@ -306,7 +308,8 @@ WHERE colocationid IN
 
 BEGIN;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_commit" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_commit" to the node localhost:57638
+NOTICE:  Replicating reference table "replicate_reference_table_commit" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370004,1370004,localhost,57638,default,f)
@@ -400,7 +403,8 @@ ORDER BY logicalrelid;
 
 BEGIN;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_reference_one" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_reference_one" to the node localhost:57638
+NOTICE:  Replicating reference table "replicate_reference_table_reference_one" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370005,1370005,localhost,57638,default,f)
@@ -481,7 +485,7 @@ SELECT create_reference_table('replicate_reference_table_insert');
 BEGIN;
 INSERT INTO replicate_reference_table_insert VALUES(1);
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_insert" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_insert" to the node localhost:57638
 ERROR:  cannot open new connections after the first modification command within a transaction
 ROLLBACK;
 DROP TABLE replicate_reference_table_insert;
@@ -496,7 +500,7 @@ SELECT create_reference_table('replicate_reference_table_copy');
 BEGIN;
 COPY replicate_reference_table_copy FROM STDIN;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_copy" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_copy" to the node localhost:57638
 ERROR:  cannot open new connections after the first modification command within a transaction
 ROLLBACK;
 DROP TABLE replicate_reference_table_copy;
@@ -513,7 +517,7 @@ ALTER TABLE replicate_reference_table_ddl ADD column2 int;
 NOTICE:  using one-phase commit for distributed DDL commands
 HINT:  You can enable two-phase commit for extra safety with: SET citus.multi_shard_commit_protocol TO '2pc'
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_ddl" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_ddl" to the node localhost:57638
 ERROR:  cannot open new connections after the first modification command within a transaction
 ROLLBACK;
 DROP TABLE replicate_reference_table_ddl;
@@ -527,7 +531,8 @@ SELECT create_reference_table('replicate_reference_table_drop');
 
 BEGIN;
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "replicate_reference_table_drop" to all workers
+NOTICE:  Replicating reference table "replicate_reference_table_drop" to the node localhost:57638
+NOTICE:  Replicating reference table "replicate_reference_table_drop" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370009,1370009,localhost,57638,default,f)
@@ -571,7 +576,8 @@ WHERE colocationid IN
 (1 row)
 
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "table1" to all workers
+NOTICE:  Replicating reference table "table1" to the node localhost:57638
+NOTICE:  Replicating reference table "table1" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1370010,1370010,localhost,57638,default,f)

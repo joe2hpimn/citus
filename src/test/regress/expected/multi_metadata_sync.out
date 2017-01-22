@@ -1303,7 +1303,8 @@ WHERE logicalrelid='mx_ref'::regclass;
 
 \c - - - :master_port
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "mx_ref" to all workers
+NOTICE:  Replicating reference table "mx_ref" to the node localhost:57638
+NOTICE:  Replicating reference table "mx_ref" to the node localhost:57637
          master_add_node         
 ---------------------------------
  (5,5,localhost,57638,default,f)

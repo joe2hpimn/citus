@@ -164,7 +164,8 @@ SELECT master_remove_node('localhost', :worker_2_port);
 ERROR:  could not find valid entry for node "localhost:57638"
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380001,1380001,localhost,57638,default,f)
@@ -387,7 +388,8 @@ WHERE
 \c - - - :master_port
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380002,1380002,localhost,57638,default,f)
@@ -516,7 +518,8 @@ SELECT * FROM remove_node_reference_table;
 \c - - - :master_port
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380003,1380003,localhost,57638,default,f)
@@ -641,7 +644,8 @@ Table "public.remove_node_reference_table"
 
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380004,1380004,localhost,57638,default,f)
@@ -779,8 +783,10 @@ WHERE
      
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
-NOTICE:  Replicating reference table "table1" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "table1" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
+NOTICE:  Replicating reference table "table1" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380005,1380005,localhost,57638,default,f)
@@ -896,8 +902,10 @@ WHERE
 \c - - - :master_port
 -- re-add the node for next tests
 SELECT master_add_node('localhost', :worker_2_port);
-NOTICE:  Replicating reference table "remove_node_reference_table" to all workers
-NOTICE:  Replicating reference table "table1" to all workers
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57638
+NOTICE:  Replicating reference table "table1" to the node localhost:57638
+NOTICE:  Replicating reference table "remove_node_reference_table" to the node localhost:57637
+NOTICE:  Replicating reference table "table1" to the node localhost:57637
                master_add_node               
 ---------------------------------------------
  (1380006,1380006,localhost,57638,default,f)
